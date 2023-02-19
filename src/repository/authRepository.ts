@@ -1,4 +1,4 @@
-import prisma from "db/database";
+import prisma from "../db/database";
 import { Prisma } from "@prisma/client";
 import { AuthEntity, AuthHash } from "protocols/authProtocols";
 
@@ -20,6 +20,8 @@ async function insertUser(email: string, hashPassword: string) {
     },
   });
 }
+
+
 
 const authRepository = {
   findEmail,
