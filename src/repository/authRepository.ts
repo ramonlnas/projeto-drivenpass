@@ -21,11 +21,21 @@ async function insertUser(email: string, hashPassword: string) {
   });
 }
 
+async function findUser(userData: number) {
+  const findUser = await prisma.user.findFirst({
+    where: {
+      id: userData
+    }
+  })
+
+  return findUser
+}
 
 
 const authRepository = {
   findEmail,
   insertUser,
+  findUser
 };
 
 export default authRepository;

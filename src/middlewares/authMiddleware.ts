@@ -1,20 +1,38 @@
-import { NextFunction, Request, Response } from "express";
-import { ObjectSchema } from "joi";
-import { authSchema } from "../models/authSchema";
+import { NextFunction, Request, response, Response } from "express";
+import jwt from "jsonwebtoken";
+import prisma from "../db/database";
+import authRepository from "../repository/authRepository";
+import { User } from "@prisma/client";
+import { not_Found_User } from "../err/not-found-user";
 
-export default function signUpMiddleware(schema: ObjectSchema) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const user = req.body;
+type Token = Omit<User, "password" | "email">;
 
-    const validation = authSchema.validate(user, { abortEarly: false });
+export async function hasToken(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { authorization } = req.headers;
 
-    if (validation.error) {
-      const errors = validation.error.details.map((detail) => detail.message);
-      return res.status(422).send(errors);
-    }
+  const token = authorization?.replace("Bearer ", "");
+  const secretKey = process.env.JWT_SECRET;
 
-    res.locals.user = user;
+  if (!token) {
+    return res.sendStatus(401);
+  }
 
-    next();
-  };
+  try {
+    const userData = jwt.verify(token, secretKey);
+    // const verifyUser = await authRepository.findUser(Number(userData));
+    // console.log(verifyUser);
+    // if (!verifyUser) {
+    //   throw not_Found_User();
+    // }
+
+    res.locals.user = userData;
+  } catch {
+    return res.status(401).send("invalid token");
+  }
+
+  next();
 }

@@ -1,6 +1,6 @@
 export function conflictError() {
   return {
     name: "ConflictError",
-    message: "Você inseriu um e-mail já cadastrado"
+    message: "Email e/ou senha incorreto"
   };
 }

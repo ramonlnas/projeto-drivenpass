@@ -45,8 +45,8 @@ async function existEmail(email: string) {
 }
 
 async function createSession(userId: number) {
-  const token = jwt.sign({userId}, process.env.JWT_SECRET, {expiresIn: 86400}) 
-
+  const secretKey=process.env.JWT_SECRET
+  const token = jwt.sign({userId}, secretKey, {expiresIn: 86400}) 
   return token
 }
 
