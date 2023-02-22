@@ -1,5 +1,5 @@
 import { NextFunction, Request, response, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import prisma from "../db/database";
 import authRepository from "../repository/authRepository";
 import { User } from "@prisma/client";
@@ -22,14 +22,15 @@ export async function hasToken(
   }
 
   try {
-    const userData = jwt.verify(token, secretKey);
-    // const verifyUser = await authRepository.findUser(Number(userData));
-    // console.log(verifyUser);
-    // if (!verifyUser) {
-    //   throw not_Found_User();
-    // }
+    const { userId } = jwt.verify(token, secretKey) as JwtPayload;
+    
+    const verifyUser = await authRepository.findUser(userId);
 
-    res.locals.user = userData;
+    if (!verifyUser) {
+      throw not_Found_User();
+    }
+    console.log(userId)
+    res.locals.user = userId;
   } catch {
     return res.status(401).send("invalid token");
   }

@@ -4,7 +4,7 @@ import { CredentialUser } from "protocols/credentialProtocols";
 async function findUser(title: string) {
     const getUser = await prisma.credential.findFirst({
         where: {
-            title: title === null ? title : undefined
+            title
         }
     })
 
@@ -23,9 +23,20 @@ async function postCredential(credential: CredentialUser ) {
     })
 }
 
+async function getCredentials(userId: number) {
+    const getUserCredentials = await prisma.credential.findMany({
+        where: {
+            userId
+        }
+    })
+
+    return getUserCredentials
+}
+
 const credentialRepository = {
     findUser, 
-    postCredential
+    postCredential,
+    getCredentials
 }
 
 export default credentialRepository

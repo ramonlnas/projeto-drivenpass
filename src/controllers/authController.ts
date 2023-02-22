@@ -4,7 +4,7 @@ import { AuthEntity } from "protocols/authProtocols";
 import authService from "../service/authService";
 
 export async function signUp(req: Request, res: Response) {
-  const { email, password } = req.body as AuthEntity;
+  const { email, password } = res.locals.user as AuthEntity;
 
   try {
     await authService.signUp({ email, password });

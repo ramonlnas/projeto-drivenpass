@@ -5,22 +5,26 @@ import {
   CredentialPost,
 } from "protocols/credentialProtocols";
 import credentialRepository from "../repository/credentialRepository";
-const Cryptr = require("cryptr");
+import Cryptr from "cryptr";
+const cryptr = new Cryptr(process.env.CRYPTR);
 
 async function postCredential(credential: CredentialPost) {
   const { url, username, password, title, userId } = credential;
+  try {
+    await credentialExist(title);
 
-  // await credentialExist(title);
+    const encryptedPassword = await cryptPass(password);
 
-  const encryptedPassword = await cryptPass(password);
-
-  await credentialRepository.postCredential({
-    url,
-    username,
-    title,
-    encryptedPassword,
-    userId,
-  });
+    await credentialRepository.postCredential({
+      url,
+      username,
+      title,
+      encryptedPassword,
+      userId,
+    });
+  } catch (err) {
+    throw err;
+  }
 }
 
 async function credentialExist(title: string) {
@@ -34,15 +38,30 @@ async function credentialExist(title: string) {
 }
 
 async function cryptPass(password: string) {
-  const cryptr = new Cryptr("secret");
   const encryptedPass = cryptr.encrypt(password);
 
   return encryptedPass;
 }
 
+async function getCredentials(userId: number) {
+  const userCredentials = await credentialRepository.getCredentials(userId);
+  const newUserCredentials = userCredentials.map((credentail) => {
+    return {
+      ...credentail,
+      password: cryptr.decrypt(credentail.password)
+    }
+  });
+  return newUserCredentials;
+}
+
+// async function findOneCredential(credentialId: number) {
+//   await
+// }
+
 const credentialService = {
   postCredential,
   credentialExist,
+  getCredentials,
 };
 
 export default credentialService;
