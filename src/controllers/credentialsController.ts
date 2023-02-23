@@ -38,9 +38,23 @@ export async function getEspecificCredential(req: Request, res: Response) {
   const userId = res.locals.user;
   try {
     const credential = await credentialService.findOneCredential(
-      parseInt(credentialId), userId
+      parseInt(credentialId),
+      userId
     );
     return res.status(httpStatus.OK).send(credential);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export async function deletCredential(req: Request, res: Response) {
+  const { credentialId } = req.params;
+  const userId = res.locals.user;
+
+  try {
+    await credentialService.deletCredential(parseInt(credentialId), userId)
+    return res.sendStatus(httpStatus.NO_CONTENT)
   } catch (err) {
     console.log(err);
     res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);

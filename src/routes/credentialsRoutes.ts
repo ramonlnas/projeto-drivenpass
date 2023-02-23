@@ -2,6 +2,7 @@ import {
   getCredentials,
   getEspecificCredential,
   postCredential,
+  deletCredential,
 } from "../controllers/credentialsController";
 import { Router } from "express";
 import { hasToken } from "../middlewares/authMiddleware";
@@ -16,5 +17,10 @@ credentialRouter.post(
   postCredential
 );
 credentialRouter.get("/credentials", hasToken, getCredentials);
-credentialRouter.get("/credentials/:credentialId", hasToken, getEspecificCredential)
+credentialRouter.get(
+  "/credentials/:credentialId",
+  hasToken,
+  getEspecificCredential
+);
+credentialRouter.delete("/credentials/:credentialId", hasToken, deletCredential);
 export default credentialRouter;

@@ -29,8 +29,10 @@ async function postCredential(credential: CredentialPost) {
 }
 
 async function credentialExist(title: string, userId: number) {
-  const credentialsUser = await credentialRepository.getCredentials(userId)
-  const verifyTitle = credentialsUser.filter((credential) => credential.title === title)
+  const credentialsUser = await credentialRepository.getCredentials(userId);
+  const verifyTitle = credentialsUser.filter(
+    (credential) => credential.title === title
+  );
 
   if (verifyTitle.length !== 0) {
     throw titleExist();
@@ -50,37 +52,48 @@ async function getCredentials(userId: number) {
   const newUserCredentials = userCredentials.map((credentail) => {
     return {
       ...credentail,
-      password: cryptr.decrypt(credentail.password)
-    }
+      password: cryptr.decrypt(credentail.password),
+    };
   });
   return newUserCredentials;
 }
 
 async function findOneCredential(credentialId: number, userId: number) {
-  const confirmUser = await credentialRepository.confirmUser(credentialId)
+  const confirmUser = await credentialRepository.confirmUser(credentialId);
 
-  if(confirmUser.userId !== userId) {
-    throw invalidRequest()
+  if (confirmUser.userId !== userId) {
+    throw invalidRequest();
   }
 
-  const newConfirmUser = cryptr.decrypt(confirmUser.password)
+  const newConfirmUser = cryptr.decrypt(confirmUser.password);
 
   const sendRightFormat = {
     id: confirmUser.id,
     title: confirmUser.title,
     username: confirmUser.username,
     password: newConfirmUser,
-    userId: confirmUser.userId
+    userId: confirmUser.userId,
+  };
+
+  return sendRightFormat;
+}
+
+async function deletCredential(credentialId: number, userId: number) {
+  const confirmUser = await credentialRepository.confirmUser(credentialId);
+
+  if (confirmUser.userId !== userId) {
+    throw invalidRequest();
   }
 
-  return sendRightFormat
+  await credentialRepository.deletCredential(credentialId);
 }
 
 const credentialService = {
   postCredential,
   credentialExist,
   getCredentials,
-  findOneCredential
+  findOneCredential,
+  deletCredential,
 };
 
 export default credentialService;

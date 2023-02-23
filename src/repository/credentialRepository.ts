@@ -44,11 +44,22 @@ async function confirmUser(credentailId: number) {
     return user
 }
 
+async function deletCredential(credentailId: number) {
+    const delet = await prisma.credential.delete({
+        where: {
+            id: credentailId
+        }
+    })
+
+    return delet
+}
+
 const credentialRepository = {
     findUser, 
     postCredential,
     getCredentials,
     confirmUser,
+    deletCredential
 }
 
 export default credentialRepository
