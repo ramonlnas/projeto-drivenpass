@@ -23,8 +23,7 @@ export async function postCredential(req: Request, res: Response) {
 }
 
 export async function getCredentials(_req: Request, res: Response) {
-  const userId  = res.locals.user;
-  console.log(userId);
+  const userId = res.locals.user;
   try {
     const getCredentials = await credentialService.getCredentials(userId);
     return res.status(httpStatus.OK).send(getCredentials);
@@ -34,14 +33,16 @@ export async function getCredentials(_req: Request, res: Response) {
   }
 }
 
-// export async function getEspecificCredential(req: Request, res: Response) {
-//   const {credentialId} = req.params
-
-//   try {
-//     const credential = await credentialService.findOneCredential(parseInt(credentialId))
-//     return res.status(httpStatus.OK).send(credential)
-//   } catch(err) {
-//     console.log(err)
-//     res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
-//   }
-// }
+export async function getEspecificCredential(req: Request, res: Response) {
+  const { credentialId } = req.params;
+  const userId = res.locals.user;
+  try {
+    const credential = await credentialService.findOneCredential(
+      parseInt(credentialId), userId
+    );
+    return res.status(httpStatus.OK).send(credential);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}

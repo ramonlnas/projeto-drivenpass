@@ -33,10 +33,32 @@ async function getCredentials(userId: number) {
     return getUserCredentials
 }
 
+async function getCredentialsForPost(userId: number) {
+    const getUserCredentials = await prisma.credential.findFirst({
+        where: {
+            userId
+        }
+    })
+
+    return getUserCredentials
+}
+
+async function confirmUser(credentailId: number) {
+    const user = await prisma.credential.findFirst({
+        where: {
+            id: credentailId
+        }
+    })
+    
+    return user
+}
+
 const credentialRepository = {
     findUser, 
     postCredential,
-    getCredentials
+    getCredentials,
+    confirmUser,
+    getCredentialsForPost
 }
 
 export default credentialRepository

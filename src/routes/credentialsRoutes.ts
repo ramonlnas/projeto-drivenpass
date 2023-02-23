@@ -1,5 +1,6 @@
 import {
   getCredentials,
+  getEspecificCredential,
   postCredential,
 } from "../controllers/credentialsController";
 import { Router } from "express";
@@ -15,6 +16,5 @@ credentialRouter.post(
   postCredential
 );
 credentialRouter.get("/credentials", hasToken, getCredentials);
-// credentialRouter.get("/signin", signIn);
-
+credentialRouter.get("/credentials/:credentialId", hasToken, getEspecificCredential)
 export default credentialRouter;
