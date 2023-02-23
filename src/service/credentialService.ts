@@ -31,7 +31,7 @@ async function postCredential(credential: CredentialPost) {
 async function credentialExist(title: string, userId: number) {
   const credentialsUser = await credentialRepository.getCredentials(userId)
   const verifyTitle = credentialsUser.filter((credential) => credential.title === title)
-  
+
   if (verifyTitle.length !== 0) {
     throw titleExist();
   }
@@ -63,7 +63,17 @@ async function findOneCredential(credentialId: number, userId: number) {
     throw invalidRequest()
   }
 
-  return confirmUser
+  const newConfirmUser = cryptr.decrypt(confirmUser.password)
+
+  const sendRightFormat = {
+    id: confirmUser.id,
+    title: confirmUser.title,
+    username: confirmUser.username,
+    password: newConfirmUser,
+    userId: confirmUser.userId
+  }
+
+  return sendRightFormat
 }
 
 const credentialService = {
