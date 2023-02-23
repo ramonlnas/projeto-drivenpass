@@ -36,11 +36,21 @@ export async function getEspecificWifi(req: Request, res: Response) {
   const { wifiId } = req.params;
   const userId = res.locals.user;
   try {
-    const wifi = await wifiService.findOneWifi(
-      parseInt(wifiId),
-      userId
-    );
+    const wifi = await wifiService.findOneWifi(parseInt(wifiId), userId);
     return res.status(httpStatus.OK).send(wifi);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export async function deletWifi(req: Request, res: Response) {
+  const { wifiId } = req.params;
+  const userId = res.locals.user;
+
+  try {
+    await wifiService.deletWifi(parseInt(wifiId), userId);
+    return res.sendStatus(httpStatus.NO_CONTENT);
   } catch (err) {
     console.log(err);
     res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);

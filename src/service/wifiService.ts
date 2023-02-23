@@ -34,23 +34,33 @@ async function getWifi(userId: number) {
 }
 
 async function findOneWifi(wifiId: number, userId: number) {
+  const confirmUser = await wifiRepository.confirmUser(wifiId);
+
+  if (confirmUser.userId !== userId) {
+    throw invalidRequest();
+  }
+
+  const newConfirmUser = cryptr.decrypt(confirmUser.password);
+
+  const sendRightFormat = {
+    id: confirmUser.id,
+    title: confirmUser.title,
+    network: confirmUser.network,
+    password: newConfirmUser,
+    userId: confirmUser.userId,
+  };
+
+  return sendRightFormat;
+}
+
+async function deletWifi(wifiId: number, userId: number) {
     const confirmUser = await wifiRepository.confirmUser(wifiId);
   
     if (confirmUser.userId !== userId) {
       throw invalidRequest();
     }
   
-    const newConfirmUser = cryptr.decrypt(confirmUser.password);
-  
-    const sendRightFormat = {
-      id: confirmUser.id,
-      title: confirmUser.title,
-      network: confirmUser.network,
-      password: newConfirmUser,
-      userId: confirmUser.userId,
-    };
-  
-    return sendRightFormat;
+    await wifiRepository.deletCredential(wifiId);
   }
   
 
@@ -63,7 +73,8 @@ async function cryptPass(password: string) {
 const wifiService = {
   wifiPost,
   getWifi,
-  findOneWifi
+  findOneWifi,
+  deletWifi
 };
 
 export default wifiService;
