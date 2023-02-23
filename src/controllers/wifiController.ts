@@ -21,3 +21,14 @@ export async function postWifi(req: Request, res: Response) {
   }
 }
 
+export async function getWifi(_req: Request, res: Response) {
+    const userId = res.locals.user;
+    try {
+      const getWifi = await wifiService.getWifi(userId);
+      return res.status(httpStatus.OK).send(getWifi);
+    } catch (err) {
+      console.log(err);
+      return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+  

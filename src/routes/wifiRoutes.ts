@@ -5,7 +5,7 @@ import { Router } from "express";
 import { hasToken } from "../middlewares/authMiddleware";
 import validMiddleware from "../middlewares/validSchema";
 import { wifiSchema } from "../models/wifiSchema";
-import { postWifi } from "../controllers/wifiController";
+import { getWifi, postWifi } from "../controllers/wifiController";
 
 const wifiRouter = Router();
 
@@ -15,5 +15,7 @@ wifiRouter.post(
   hasToken,
   postWifi
 );
+
+wifiRouter.get("/wifi", hasToken, getWifi)
 
 export default wifiRouter

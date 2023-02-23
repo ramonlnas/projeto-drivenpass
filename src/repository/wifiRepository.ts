@@ -11,8 +11,21 @@ async function postWifi(wifi: wifiEncrypted ) {
         }
     })
 }
+
+async function getWifi(userId: number) {
+    const getUserCredentials = await prisma.network.findMany({
+        where: {
+            userId
+        }
+    })
+
+    return getUserCredentials
+}
+
+
 const wifiRepository = {
-    postWifi
+    postWifi,
+    getWifi
 }
 
 export default wifiRepository
