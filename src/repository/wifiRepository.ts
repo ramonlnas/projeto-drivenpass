@@ -22,10 +22,21 @@ async function getWifi(userId: number) {
     return getUserCredentials
 }
 
+async function confirmUser(wifiId: number) {
+    const user = await prisma.network.findFirst({
+        where: {
+            id: wifiId
+        }
+    })
+    
+    return user
+}
+
 
 const wifiRepository = {
     postWifi,
-    getWifi
+    getWifi,
+    confirmUser
 }
 
 export default wifiRepository

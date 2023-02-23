@@ -7,6 +7,7 @@ const cryptr = new Cryptr(process.env.CRYPTR);
 
 async function wifiPost(wifi: WifiInput) {
   const { title, network, password, userId } = wifi;
+
   try {
     const encryptedPassword = await cryptPass(password);
 
@@ -32,18 +33,26 @@ async function getWifi(userId: number) {
   return newUserWifi;
 }
 
-// async function wifiExist(title: string, userId: number) {
-//   const wifiUser = await wifiRepository.getCredentials(userId);
-//   const verifyTitle = wifiUser.filter(
-//     (wifi) => wifi.title === title
-//   );
-
-//   if (verifyTitle.length !== 0) {
-//     throw titleExist();
-//   }
-
-//   return wifiUser;
-// }
+async function findOneWifi(wifiId: number, userId: number) {
+    const confirmUser = await wifiRepository.confirmUser(wifiId);
+  
+    if (confirmUser.userId !== userId) {
+      throw invalidRequest();
+    }
+  
+    const newConfirmUser = cryptr.decrypt(confirmUser.password);
+  
+    const sendRightFormat = {
+      id: confirmUser.id,
+      title: confirmUser.title,
+      network: confirmUser.network,
+      password: newConfirmUser,
+      userId: confirmUser.userId,
+    };
+  
+    return sendRightFormat;
+  }
+  
 
 async function cryptPass(password: string) {
   const encryptedPass = cryptr.encrypt(password);
@@ -53,7 +62,8 @@ async function cryptPass(password: string) {
 
 const wifiService = {
   wifiPost,
-  getWifi
+  getWifi,
+  findOneWifi
 };
 
 export default wifiService;
