@@ -1,6 +1,6 @@
 export function conflictError() {
   return {
-    name: "ConflictError",
+    name: "PasswordError",
     message: "Email e/ou senha incorreto"
   };
 }

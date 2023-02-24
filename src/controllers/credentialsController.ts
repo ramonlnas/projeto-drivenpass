@@ -36,6 +36,7 @@ export async function getCredentials(_req: Request, res: Response) {
 export async function getEspecificCredential(req: Request, res: Response) {
   const { credentialId } = req.params;
   const userId = res.locals.user;
+  console.log(userId, "teste", credentialId)
   try {
     const credential = await credentialService.findOneCredential(
       parseInt(credentialId),

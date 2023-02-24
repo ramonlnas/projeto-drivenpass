@@ -15,8 +15,8 @@ async function signUp(auth: AuthEntity) {
   await authRepository.insertUser(email, hashPassword);
 }
 
-async function signIn(auth: AuthEntity) {
-  const { email, password } = auth;
+async function signIn(email: string, password: string) {
+  // const { email, password } = auth;
 
   const user = await authRepository.findEmail(email);
 
@@ -30,9 +30,9 @@ async function signIn(auth: AuthEntity) {
     throw conflictError();
   }
 
-  const token = await createSession(user.id)
+  const token = await createSession(user.id);
 
-  return token
+  return { token };
 }
 
 async function existEmail(email: string) {
@@ -45,9 +45,9 @@ async function existEmail(email: string) {
 }
 
 async function createSession(userId: number) {
-  const secretKey=process.env.JWT_SECRET
-  const token = jwt.sign({userId}, secretKey, {expiresIn: 86400}) 
-  return token
+  const secretKey = process.env.JWT_SECRET;
+  const token = jwt.sign({ userId }, secretKey, { expiresIn: 86400 });
+  return token;
 }
 
 const authService = {

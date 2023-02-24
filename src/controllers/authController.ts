@@ -11,19 +11,25 @@ export async function signUp(req: Request, res: Response) {
     return res.sendStatus(httpStatus.CREATED);
   } catch (err) {
     console.log(err);
-    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+    return res.sendStatus(httpStatus.CONFLICT);
   }
 }
 
 export async function signIn(req: Request, res: Response) {
   const { email, password } = req.body as AuthEntity;
 
-  try{
-    const result = await authService.signIn({email, password})
-    return res.status(httpStatus.OK).send(result)
-  } catch(err) {
-    console.log(err)
-    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  try {
+    const result = await authService.signIn(email, password);
+    return res.status(httpStatus.OK).send(result);
+  } catch (err) {
+    console.log(err);
+    if (err.name === "NOT_FOUND") {
+      return res.status(httpStatus.NOT_FOUND).send(err);
+    }
+    if(err.name === "PasswordError") {
+      return res.status(httpStatus.UNAUTHORIZED).send(err)
+    }
+    return res.status(httpStatus.BAD_REQUEST).send({});
   }
 }
 
