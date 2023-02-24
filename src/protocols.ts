@@ -1,5 +1,5 @@
-export type SignUp = {
-    id: number,
+export type Users = {
+    id?: number,
     email: string,
     password: string,
 }
