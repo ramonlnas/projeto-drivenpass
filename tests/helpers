@@ -1,8 +1,0 @@
-import * as jwt from "jsonwebtoken";
-import { SignUp } from "../src/protocols";
-
-export async function generateValidToken(user: SignUp) {
-
-    const token = await jwt.sign({ userId: Number(user.id) }, process.env.JWT_SECRET);
-    return token;
-}

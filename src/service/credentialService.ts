@@ -59,9 +59,7 @@ async function getCredentials(userId: number) {
 }
 
 async function findOneCredential(credentialId: number, userId: number) {
-  console.log(credentialId, "test3")
   const confirmUser = await credentialRepository.confirmUser(credentialId);
-  console.log(userId, "TEST", confirmUser)
   if (confirmUser.userId !== userId) {
     throw invalidRequest();
   }
