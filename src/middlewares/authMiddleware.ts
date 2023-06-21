@@ -29,7 +29,7 @@ export async function hasToken(
     if (!verifyUser) {
       throw not_Found_User();
     }
-    console.log(userId)
+    console.log(userId, "chegou no hasTOken")
     res.locals.user = userId;
   } catch {
     return res.status(401).send("invalid token");
