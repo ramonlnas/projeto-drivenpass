@@ -21,7 +21,6 @@ export function validSchema(schema: Schema) {
 export function validCredential(schema: Schema) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body;
-    console.log(user, "teste1")
 
     const validation = schema.validate(user, { abortEarly: false });
 

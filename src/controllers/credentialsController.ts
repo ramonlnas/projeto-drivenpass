@@ -6,7 +6,6 @@ import credentialService from "../service/credentialService";
 export async function postCredential(req: Request, res: Response) {
   const { url, username, password, title } = req.body as CredentialEntity;
   const userId = res.locals.user;
-  console.log(userId, "Chegou aqui")
 
   try {
     await credentialService.postCredential({
