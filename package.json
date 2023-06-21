@@ -37,8 +37,6 @@
   "scripts": {
     "dev": "npx nodemon src/app.ts",
     "prisma:seed": "npx prisma db seed",
-    "test": "NODE_ENV=test jest --passWithNoTests --runInBand",
-    "test:coverage": "NODE_ENV=test jest --passWithNoTests --runInBand --coverage --collectCoverageFrom='./src/**'"
   },
   "repository": {
     "type": "git",
